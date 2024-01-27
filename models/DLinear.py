@@ -43,6 +43,7 @@ class Model(nn.Module):
         super(Model, self).__init__()
         self.seq_len = configs.seq_len
         self.pred_len = configs.pred_len
+        self.ChannelProjector = nn.Linear(configs.enc_in, configs.c_out)
 
         # Decompsition Kernel Size
         kernel_size = 25
@@ -83,5 +84,14 @@ class Model(nn.Module):
             seasonal_output = self.Linear_Seasonal(seasonal_init)
             trend_output = self.Linear_Trend(trend_init)
 
+        # 相加后的维度：[Batch, enc_in, pred_len] (例如 [32, 15, 96])
         x = seasonal_output + trend_output
-        return x.permute(0,2,1) # to [Batch, Output length, Channel]
+
+        # 1. 把通道维交换到最后，以适配 nn.Linear 的计算要求
+        x = x.permute(0, 2, 1)  # 变换后维度：[Batch, pred_len, enc_in] (例如 [32, 96, 15])
+
+        # 2. 进行通道维度的投影映射（15 维噪声与物理特征 -> 6 维目标真实值）
+        x = self.ChannelProjector(x)  # 映射后维度：[Batch, pred_len, c_out] (例如 [32, 96, 6])
+
+        # 3. 此时的维度已完美符合原框架 exp_main.py 对 outputs 的标准期望，直接返回
+        return x  # [Batch, Output length, Channel]

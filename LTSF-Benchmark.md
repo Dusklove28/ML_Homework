@@ -96,4 +96,27 @@
 |ARIMA|MSE|0.058|0.073|0.086|0.103|0.273|0.315|0.367|0.413|0.033|0.049|0.065|0.089|0.211|0.237|0.264|0.31| | |
 | |MAE|0.184|0.209|0.231|0.253|0.407|0.446|0.488|0.519|0.136|0.169|0.196|0.231|0.34|0.371|0.396|0.441| | |
 
-
+运行命令：
+python run_longExp.py \
+  --is_training 1 \
+  --model_id ML_final_DLinear_tuned \
+  --model DLinear \
+  --data custom \
+  --root_path ./dataset/my_dataset/ \
+  --data_path train_data.csv \
+  --features M \
+  --seq_len 336 \
+  --label_len 48 \
+  --pred_len 96 \
+  --enc_in 15 \
+  --dec_in 15 \
+  --c_out 6 \
+  --train_epochs 15 \
+  --batch_size 32 \
+  --learning_rate 0.001 \
+  --patience 4 \
+  --num_workers 10 \
+  --use_gpu True \
+  --gpu 0 \
+  --individual \
+  --loss mae

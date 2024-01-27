@@ -1,0 +1,18 @@
+python run_longExp.py \
+  --is_training 1 \
+  --model_id ML_final_DLinear \
+  --model DLinear \
+  --data custom \
+  --root_path ./dataset/my_dataset/ \
+  --data_path train_data.csv \
+  --features M \
+  --seq_len 336 \
+  --label_len 48 \
+  --pred_len 96 \
+  --enc_in 15 \
+  --dec_in 15 \
+  --c_out 6 \
+  --train_epochs 15 \
+  --batch_size 32 \
+  --learning_rate 0.001 \
+  --patience 3
